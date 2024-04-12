@@ -1,0 +1,10 @@
+name: SidebarEconomy
+author: Hibi_10000
+version: 1.0
+api-version: 1.16
+main: com.github.hibi_10000.plugins.SidebarEconomy
+depend: [Vault]
+commands:
+   side:
+      usage: /<command>
+      description: SideBarEcon Show/Hide command.
