@@ -24,123 +24,123 @@ import org.bukkit.scoreboard.Scoreboard;
 import net.milkbowl.vault.economy.Economy;
 
 public class SidebarEconomy extends JavaPlugin implements Listener {
-	boolean enable = true;
-	BukkitTask task = null;
-	Economy econ = null;
-	List<String> players = new ArrayList<String>();
+    boolean enable = true;
+    BukkitTask task = null;
+    Economy econ = null;
+    List<String> players = new ArrayList<String>();
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void onEnable() {
-		super.onEnable();
-		task = new BukkitRunnable() {
-			List<String> players = new ArrayList<String>();
-			@Override
-			public void run() {
-				for (Player p : Bukkit.getOnlinePlayers()) {
-					p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-					Scoreboard board;
-					board = Bukkit.getScoreboardManager().getNewScoreboard();
-					Objective obj = board.registerNewObjective(p.getName(), "dummy");
-					obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-					obj.setDisplayName(ChatColor.GOLD + "Money");
-					Score score = obj.getScore(p.getName());
-					score.setScore((int) econ.getBalance(p.getName()));
-					p.setScoreboard(board);
-					this.players.add(p.getName());
-					if (this.players.contains(p.getName())) {
-						if(enable == true) {
-							Score score1 = obj.getScore(p);
-							score1.setScore((int) econ.getBalance(p.getName()));
-							p.setScoreboard(board);
-						} else {
-							board.resetScores(p.getName());
-						}
-					}
-				}
-			}
-		}.runTaskTimer(this, 0L, 20L);
-		getServer().getPluginManager().registerEvents(this, this);
-		setupEconomy();
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-			Scoreboard board;
-			board = Bukkit.getScoreboardManager().getNewScoreboard();
-			Objective obj = board.registerNewObjective(p.getName(), "dummy");
-			obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-			obj.setDisplayName(ChatColor.GOLD + "Money");
-			Score score = obj.getScore(p.getName());
-			score.setScore((int) econ.getBalance(p.getName()));
-			p.setScoreboard(board);
-			this.players.add(p.getName());
-			if (this.players.contains(p.getName())) {
-				if(enable == true) {
-					Score score1 = obj.getScore(p);
-					score1.setScore((int) econ.getBalance(p.getName()));
-					p.setScoreboard(board);
-				}
-				else {
-					board.resetScores(p.getName());
-				}
-			}
-		}
-	}
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onEnable() {
+        super.onEnable();
+        task = new BukkitRunnable() {
+            List<String> players = new ArrayList<String>();
+            @Override
+            public void run() {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+                    Scoreboard board;
+                    board = Bukkit.getScoreboardManager().getNewScoreboard();
+                    Objective obj = board.registerNewObjective(p.getName(), "dummy");
+                    obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+                    obj.setDisplayName(ChatColor.GOLD + "Money");
+                    Score score = obj.getScore(p.getName());
+                    score.setScore((int) econ.getBalance(p.getName()));
+                    p.setScoreboard(board);
+                    this.players.add(p.getName());
+                    if (this.players.contains(p.getName())) {
+                        if(enable == true) {
+                            Score score1 = obj.getScore(p);
+                            score1.setScore((int) econ.getBalance(p.getName()));
+                            p.setScoreboard(board);
+                        } else {
+                            board.resetScores(p.getName());
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(this, 0L, 20L);
+        getServer().getPluginManager().registerEvents(this, this);
+        setupEconomy();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+            Scoreboard board;
+            board = Bukkit.getScoreboardManager().getNewScoreboard();
+            Objective obj = board.registerNewObjective(p.getName(), "dummy");
+            obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+            obj.setDisplayName(ChatColor.GOLD + "Money");
+            Score score = obj.getScore(p.getName());
+            score.setScore((int) econ.getBalance(p.getName()));
+            p.setScoreboard(board);
+            this.players.add(p.getName());
+            if (this.players.contains(p.getName())) {
+                if(enable == true) {
+                    Score score1 = obj.getScore(p);
+                    score1.setScore((int) econ.getBalance(p.getName()));
+                    p.setScoreboard(board);
+                }
+                else {
+                    board.resetScores(p.getName());
+                }
+            }
+        }
+    }
 
-	public void onDisable() {
-		super.onDisable();
-	}
+    public void onDisable() {
+        super.onDisable();
+    }
 
-	@SuppressWarnings("deprecation")
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-			Scoreboard board;
-			board = Bukkit.getScoreboardManager().getNewScoreboard();
-			Objective obj = board.registerNewObjective(p.getName(),"dummy");
-			obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-			obj.setDisplayName(ChatColor.GOLD + "Money");
-			Score score = obj.getScore(p.getName());
-			score.setScore((int) econ.getBalance(p.getName()));
-			p.setScoreboard(board);
-			this.players.add(p.getName());
-			if (this.players.contains(p.getName())) {
-				if(enable == true) {
-					Score score1 = obj.getScore(p);
-					score1.setScore((int) econ.getBalance(p.getName()));
-					p.setScoreboard(board);
-				}
-				else {
-					board.resetScores(p.getName());
-				}
-			}
-		}
-	}
+    @SuppressWarnings("deprecation")
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+            Scoreboard board;
+            board = Bukkit.getScoreboardManager().getNewScoreboard();
+            Objective obj = board.registerNewObjective(p.getName(),"dummy");
+            obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+            obj.setDisplayName(ChatColor.GOLD + "Money");
+            Score score = obj.getScore(p.getName());
+            score.setScore((int) econ.getBalance(p.getName()));
+            p.setScoreboard(board);
+            this.players.add(p.getName());
+            if (this.players.contains(p.getName())) {
+                if(enable == true) {
+                    Score score1 = obj.getScore(p);
+                    score1.setScore((int) econ.getBalance(p.getName()));
+                    p.setScoreboard(board);
+                }
+                else {
+                    board.resetScores(p.getName());
+                }
+            }
+        }
+    }
 
-	@EventHandler
-	public void onQuit(PlayerQuitEvent e) {
-		this.players.remove(e.getPlayer().getName());
-	}
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        this.players.remove(e.getPlayer().getName());
+    }
 
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		if(cmd.getName().equalsIgnoreCase("side")){ 
-			if(enable == true) {sender.sendMessage("§A[SideBarEcon] §6Hide the sidebar.");}
-			if(enable == false) {sender.sendMessage("§A[SideBarEcon] §6Show the sidebar.");}
-			enable = !enable;
-			return true;
-		}
-		return false;
-	}
+    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
+        if(cmd.getName().equalsIgnoreCase("side")){ 
+            if(enable == true) {sender.sendMessage("§A[SideBarEcon] §6Hide the sidebar.");}
+            if(enable == false) {sender.sendMessage("§A[SideBarEcon] §6Show the sidebar.");}
+            enable = !enable;
+            return true;
+        }
+        return false;
+    }
 
-	public boolean setupEconomy() {
-		if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null) {
-			return false;
-		}
-		RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
-		if (rsp == null) {
-			return false;
-		}
-		econ = rsp.getProvider();
-		return econ != null;
-	}
+    public boolean setupEconomy() {
+        if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
 }
