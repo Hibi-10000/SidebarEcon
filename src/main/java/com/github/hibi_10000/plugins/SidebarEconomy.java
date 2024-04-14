@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -19,14 +18,10 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SidebarEconomy extends JavaPlugin implements Listener {
     boolean enable = true;
     BukkitTask task = null;
     Economy econ = null;
-    final List<String> players = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -55,29 +50,19 @@ public class SidebarEconomy extends JavaPlugin implements Listener {
             Objective obj = board.registerNewObjective(p.getName(), "dummy");
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
             obj.setDisplayName(ChatColor.GOLD + "Money");
-            Score score = obj.getScore(p.getName());
-            score.setScore((int) econ.getBalance(p.getName()));
-            p.setScoreboard(board);
-            players.add(p.getName());
-            if (players.contains(p.getName())) {
-                if (enable) {
-                    Score score1 = obj.getScore(p);
-                    score1.setScore((int) econ.getBalance(p.getName()));
-                    p.setScoreboard(board);
-                } else {
-                    board.resetScores(p.getName());
-                }
+            if (enable) {
+                Score score = obj.getScore(p);
+                score.setScore((int) econ.getBalance(p.getName()));
+                p.setScoreboard(board);
+            } else {
+                board.resetScores(p.getName());
             }
         }
     }
 
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        this.players.remove(e.getPlayer().getName());
-    }
-
-    public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-        if(cmd.getName().equalsIgnoreCase("side")){ 
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
+        if (command.getName().equalsIgnoreCase("side")) {
             if (enable) sender.sendMessage("§A[SideBarEcon] §6Hide the sidebar.");
             else        sender.sendMessage("§A[SideBarEcon] §6Show the sidebar.");
             enable = !enable;
