@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -16,8 +17,12 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public class SidebarEconomy extends JavaPlugin implements Listener {
-    boolean enable = true;
+    Map<UUID, Boolean> enableMap = new HashMap<>();
     BukkitTask task = null;
     Economy econ = null;
 
@@ -30,7 +35,13 @@ public class SidebarEconomy extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        enableMap.put(e.getPlayer().getUniqueId(), true);
         updateScoreboard();
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        enableMap.remove(e.getPlayer().getUniqueId());
     }
 
     @SuppressWarnings("deprecation")
@@ -41,7 +52,7 @@ public class SidebarEconomy extends JavaPlugin implements Listener {
             Objective obj = board.registerNewObjective(p.getName(), "dummy");
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
             obj.setDisplayName(ChatColor.GOLD + "Money");
-            if (enable) {
+            if (enableMap.get(p.getUniqueId())) {
                 Score score = obj.getScore(p);
                 score.setScore((int) econ.getBalance(p.getName()));
                 p.setScoreboard(board);
@@ -52,11 +63,13 @@ public class SidebarEconomy extends JavaPlugin implements Listener {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("side")) {
-            if (enable) sender.sendMessage("§A[SideBarEcon] §6Hide the sidebar.");
-            else        sender.sendMessage("§A[SideBarEcon] §6Show the sidebar.");
-            enable = !enable;
+            if (!(sender instanceof Player)) return false;
+            UUID uuid = ((Player) sender).getUniqueId();
+            if (enableMap.get(uuid)) sender.sendMessage("§A[SideBarEcon] §6Hide the sidebar.");
+            else                     sender.sendMessage("§A[SideBarEcon] §6Show the sidebar.");
+            enableMap.replace(uuid, !enableMap.get(uuid));
             return true;
         }
         return false;
