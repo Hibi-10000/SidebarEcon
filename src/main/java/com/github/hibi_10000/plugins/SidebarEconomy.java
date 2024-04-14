@@ -25,16 +25,14 @@ public class SidebarEconomy extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        super.onEnable();
+        getServer().getPluginManager().registerEvents(this, this);
+        setupEconomy();
         task = new BukkitRunnable() {
             @Override
             public void run() {
                 updateScoreboard();
             }
         }.runTaskTimer(this, 0L, 20L);
-        getServer().getPluginManager().registerEvents(this, this);
-        setupEconomy();
-        updateScoreboard();
     }
 
     @EventHandler
