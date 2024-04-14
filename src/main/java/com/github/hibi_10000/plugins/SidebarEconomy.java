@@ -1,7 +1,6 @@
 package com.github.hibi_10000.plugins;
 
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -25,8 +24,8 @@ public class SidebarEconomy extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
-        if (!setupEconomy()) Bukkit.getPluginManager().disablePlugin(this);
-        task = Bukkit.getScheduler().runTaskTimer(this, this::updateScoreboard, 0L, 20L);
+        if (!setupEconomy()) getServer().getPluginManager().disablePlugin(this);
+        task = getServer().getScheduler().runTaskTimer(this, this::updateScoreboard, 0L, 20L);
     }
 
     @EventHandler
@@ -36,9 +35,9 @@ public class SidebarEconomy extends JavaPlugin implements Listener {
 
     @SuppressWarnings("deprecation")
     public void updateScoreboard() {
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-            Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+        for (Player p : getServer().getOnlinePlayers()) {
+            p.setScoreboard(getServer().getScoreboardManager().getNewScoreboard());
+            Scoreboard board = getServer().getScoreboardManager().getNewScoreboard();
             Objective obj = board.registerNewObjective(p.getName(), "dummy");
             obj.setDisplaySlot(DisplaySlot.SIDEBAR);
             obj.setDisplayName(ChatColor.GOLD + "Money");
@@ -64,10 +63,10 @@ public class SidebarEconomy extends JavaPlugin implements Listener {
     }
 
     public boolean setupEconomy() {
-        if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null) {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }
-        RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
             return false;
         }
