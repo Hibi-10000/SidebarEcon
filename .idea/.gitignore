@@ -1,6 +1,10 @@
 /**/*
+!/dictionaries/
+!/dictionaries/sidebareconomy.xml
 !.gitignore
+!encodings.xml
 !modules.xml
+!vcs.xml
 
 # デフォルトの無視対象ファイル
 /shelf/
