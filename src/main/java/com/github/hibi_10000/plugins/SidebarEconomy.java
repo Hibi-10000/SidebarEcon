@@ -25,11 +25,16 @@ public class SidebarEconomy extends JavaPlugin implements Listener {
     Map<UUID, Boolean> enableMap = new HashMap<>();
     BukkitTask task = null;
     Economy econ = null;
+    Scoreboard scoreboard = null;
+    Objective scoreObj = null;
 
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
         if (!setupEconomy()) getServer().getPluginManager().disablePlugin(this);
+        scoreboard = getServer().getScoreboardManager().getNewScoreboard();
+        scoreObj = scoreboard.registerNewObjective("SidebarEconomy", "dummy", ChatColor.GOLD + "Money");
+        scoreObj.setDisplaySlot(DisplaySlot.SIDEBAR);
         task = getServer().getScheduler().runTaskTimer(this, this::updateScoreboard, 0L, 20L);
     }
 
@@ -42,22 +47,17 @@ public class SidebarEconomy extends JavaPlugin implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         enableMap.remove(e.getPlayer().getUniqueId());
+        scoreboard.resetScores(e.getPlayer().getName());
     }
 
-    @SuppressWarnings("deprecation")
     public void updateScoreboard() {
         for (Player p : getServer().getOnlinePlayers()) {
-            p.setScoreboard(getServer().getScoreboardManager().getNewScoreboard());
-            Scoreboard board = getServer().getScoreboardManager().getNewScoreboard();
-            Objective obj = board.registerNewObjective(p.getName(), "dummy");
-            obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-            obj.setDisplayName(ChatColor.GOLD + "Money");
             if (enableMap.get(p.getUniqueId())) {
-                Score score = obj.getScore(p);
-                score.setScore((int) econ.getBalance(p.getName()));
-                p.setScoreboard(board);
+                Score score = scoreObj.getScore(p.getName());
+                score.setScore((int) econ.getBalance(p));
+                p.setScoreboard(scoreboard);
             } else {
-                board.resetScores(p.getName());
+                scoreboard.resetScores(p.getName());
             }
         }
     }
