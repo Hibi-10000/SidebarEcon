@@ -1,4 +1,4 @@
-package com.github.hibi_10000.plugins;
+package com.github.hibi_10000.plugins.sidebareconomy;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
